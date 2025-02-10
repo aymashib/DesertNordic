@@ -1,36 +1,47 @@
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
-import { Fade } from '@mui/material';
-import { TextField, InputAdornment } from '@mui/material';
+import { Fade, Divider } from '@mui/material'; // Ensure Divider is imported from @mui/material
 import SearchIcon from '@mui/icons-material/Search';
 import LoginGate from './components/auth/LoginGate';
 import React, { useState, useEffect } from 'react';
+import { Routes, Route, Link as RouterLink } from 'react-router-dom';
+import Store from './pages/Store';
+import Home from './pages/Home';
+import { FaUser, FaShoppingCart, FaInstagram, FaPinterest, FaLinkedinIn } from 'react-icons/fa'; // Import icons from react-icons
+import useScrollDirection from './hooks/useScrollDirection';
+
 import { 
-  AppBar, 
-  Toolbar, 
+  Navbar, 
+  NavbarBrand, 
+  NavbarContent, 
+  NavbarItem, 
+  Link as HeroLink, 
+  button as HeroButton,
+  AcmeLogo,
+ 
+} from "@heroui/react";
+import { 
   Typography, 
   Container, 
   Grid, 
-  Card, 
-  CardMedia, 
-  CardContent,
   Box,
-  Link,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-  Button
+  TextField,
+  IconButton,
+  Button // Add this import for Button
 } from '@mui/material';
 import logo from './assets/images/logobrown-nobackground.png';
 import Loader from './components/Loader';
-import Header from './components/layout/Header';
+// Remove the Header import
+// import Header from './components/layout/Header';
 import ProductCard from './components/products/ProductCard';
 import Cart from './components/cart/Cart';
 import ProductDetail from './components/products/ProductDetail';
-import DesertWeather from './components/DesertWeather';
+// Remove this import
+// import DesertWeather from './components/DesertWeather';
 // Remove this import
 // import ParticleBackground from './components/ParticleBackground';
-
+import MenuIcon from '@mui/icons-material/Menu';
+import { useMediaQuery } from '@mui/material';
+import ProductSlider from './components/products/ProductSlider';
 // Update the products array with local image paths
 const products = [
   {
@@ -39,7 +50,8 @@ const products = [
     price: 39.99,
     image: require('./assets/images/preview (1).webp'),
     hoverImage: require('./assets/images/preview (5).webp'),
-    description: 'Minimalist ceramic mug with circular patterns'
+    description: 'Minimalist ceramic mug with circular patterns',
+    category: 'Gobi Desert'
   },
   {
     id: 2,
@@ -47,7 +59,8 @@ const products = [
     price: 39.99,
     image: require('./assets/images/preview (2).webp'),
     hoverImage: require('./assets/images/preview (5).webp'),
-    description: 'Ceramic mug with wave patterns'
+    description: 'Ceramic mug with wave patterns',
+    category: 'Monte Fuji'
   },
   {
     id: 3,
@@ -55,7 +68,8 @@ const products = [
     price: 39.99,
     image: require('./assets/images/preview copy.png'),    
     hoverImage: require('./assets/images/preview (1).webp'),
-    description: 'Geometric pattern ceramic mug'
+    description: 'Geometric pattern ceramic mug',
+    category: 'Achacama Desert'
   },
   {
     id: 4,
@@ -63,47 +77,54 @@ const products = [
     price: 39.99,
     image: require('./assets/images/preview (4).webp'),    
     hoverImage: require('./assets/images/preview (4).webp'),
-    description: 'Geometric pattern ceramic mug'
+    description: 'Geometric pattern ceramic mug',
+    category: 'Antartica'
   },
+  // Fix the category name in the products array
   {
     id: 5,
     name: 'Nordic Mug 05',
     price: 39.99,
     image: require('./assets/images/preview (5).webp'),    
-    hoverImage: require('./assets/images/preview (7).png'), // Add hover images for other products
-    description: 'Geometric pattern ceramic mug'
+    hoverImage: require('./assets/images/preview (7).png'),
+    description: 'Geometric pattern ceramic mug',
+    category: 'Monte Fuji'  // Changed from 'MONTE FUJI' to match other categories
   },
   {
     id: 6,
     name: 'Nordic Mug 06',
     price: 39.99,
     image: require('./assets/images/preview (5).webp'),    
-    hoverImage: require('./assets/images/preview (7).png'), // Add hover images for other products
-    description: 'Geometric pattern ceramic mug'
+    hoverImage: require('./assets/images/preview (7).png'),
+    description: 'Geometric pattern ceramic mug',
+    category: 'Gobi Desert'
   },
   {
     id: 7,
     name: 'Nordic Mug 07',
     price: 39.99,
     image: require('./assets/images/preview (5).webp'),    
-    hoverImage: require('./assets/images/preview (7).png'), // Add hover images for other products
-    description: 'Geometric pattern ceramic mug'
+    hoverImage: require('./assets/images/preview (7).png'),
+    description: 'Geometric pattern ceramic mug',
+    category: 'Achacama Desert'
   },
   {
     id: 8,
     name: 'Nordic Mug 08',
     price: 39.99,
     image: require('./assets/images/preview (5).webp'),    
-    hoverImage: require('./assets/images/preview (7).png'), // Add hover images for other products
-    description: 'Geometric pattern ceramic mug'
+    hoverImage: require('./assets/images/preview (7).png'),
+    description: 'Geometric pattern ceramic mug',
+    category: 'Antartica'
   },
   {
     id: 9,
     name: 'Nordic Mug 09',
     price: 39.99,
     image: require('./assets/images/preview (5).webp'),    
-    hoverImage: require('./assets/images/preview (7).png'), // Add hover images for other products
-    description: 'Geometric pattern ceramic mug'
+    hoverImage: require('./assets/images/preview (7).png'),
+    description: 'Geometric pattern ceramic mug',
+    category: 'Monte Fuji'
   },
   {
     id: 10,
@@ -111,7 +132,8 @@ const products = [
     price: 39.99,
     image: require('./assets/images/preview (5).webp'),
     hoverImage: require('./assets/images/preview (5).webp'),
-    description: 'Geometric pattern ceramic mug'
+    description: 'Geometric pattern ceramic mug',
+    category: 'Gobi Desert'
   },
   {
     id: 11,
@@ -119,7 +141,8 @@ const products = [
     price: 39.99,
     image: require('./assets/images/preview (5).webp'),
     hoverImage: require('./assets/images/preview (5).webp'),
-    description: 'Geometric pattern ceramic mug'
+    description: 'Geometric pattern ceramic mug',
+    category: 'Achacama Desert'
   },
   {
     id: 12,
@@ -127,7 +150,8 @@ const products = [
     price: 39.99,
     image: require('./assets/images/preview (5).webp'),
     hoverImage: require('./assets/images/preview (5).webp'),
-    description: 'Geometric pattern ceramic mug'
+    description: 'Geometric pattern ceramic mug',
+    category: 'Antartica'
   }
 ];
 
@@ -136,8 +160,12 @@ const products = [
 
 
 
+
+
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const scrollDirection = useScrollDirection();
+  
+  // Remove the isAuthenticated state
   const [loading, setLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
   const [cart, setCart] = useState([]);
@@ -146,19 +174,26 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentQuote, setCurrentQuote] = useState(0);
 
+  // Add these new quotes that blend desert and Nordic concepts
   const minimalistQuotes = [
-    "Simplicity is the ultimate sophistication",
-    "Less is more in design and life",
-    "Where desert meets Nordic minimalism",
-    "Find beauty in simplicity",
-    "Crafted with desert's serenity"
+    "Where desert winds meet Nordic simplicity",
+    "Crafted in silence, like desert at dawn",
+    "Minimalism inspired by nature's extremes",
+    "Finding beauty in emptiness",
+    "Where two worlds of simplicity collide",
+    "Embracing the essence of less"
   ];
 
-  // Add back the loader effect
+  // Add a new state for parallax effect
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  // Add scroll effect
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    const handleScroll = () => {
+      setScrollPosition(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Clock effect
@@ -197,68 +232,457 @@ function App() {
     setSelectedProduct(null);
   };
 
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
+  const categories = ['All', 'Gobi Desert', 'Monte fuji', 'Achacama Desert', 'Antartica'];
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    console.log('Selected Category:', category);
+    console.log('Filtered Products:', products.filter(product => product.category === category));
+  };
+
+  const filteredProducts = selectedCategory === 'All' 
+    ? products 
+    : products.filter(product => product.category === selectedCategory);
+
+  // Define drawerOpen state
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Define toggleDrawer function
+  const toggleDrawer = (open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    setDrawerOpen(open);
+  };
+
+  // Use media query to determine if the screen size is small (mobile)
+  const isMobile = useMediaQuery('(max-width:768px)'); // Adjusted breakpoint
+
+  // Modify the loader effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    // Cleanup function
+    return () => clearTimeout(timer);
+  }, []); // Empty dependency array to run only once
+
+  // Update the main Box component's styling
   return (
     <>
-      {!isAuthenticated ? (
-        <LoginGate onLogin={() => setIsAuthenticated(true)} />
-      ) : (
-        <>
-          <Loader isLoading={loading} />
-          <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh', opacity: loading ? 0 : 1, transition: 'opacity 0.5s ease', visibility: loading ? 'hidden' : 'visible', position: 'relative', zIndex: 1 }}>
-            <DesertWeather />
-            <Header logo={logo} cartItemsCount={cart.length} onCartClick={() => setIsCartOpen(true)} />
+      {loading && <Loader isLoading={loading} />}
+      <Box sx={{ 
+        bgcolor: '#FAF6F1', 
+        minHeight: '100vh', 
+        opacity: loading ? 0 : 1, 
+        transition: 'all 0.5s ease-in-out',
+        visibility: loading ? 'hidden' : 'visible', 
+        position: 'relative', 
+        zIndex: 1,
+        display: loading ? 'none' : 'block'
+      }}>
+        {/* Use Divider from @mui/material */}
+        <Divider />
+        
+        {/* Navbar */}
+        <Box
+          sx={{
+            position: 'fixed',
+            width: '100%',
+            top: 0,
+            backgroundColor: 'rgba(250, 246, 241, 0.98)',
+            backdropFilter: 'blur(10px)',
+            zIndex: 1000,
+            height: '120px',
+            display: 'flex',
+            alignItems: 'center',
+            borderBottom: '1px solid rgba(0,0,0,0.03)',
+            transition: 'all 0.3s ease',
+            transform: scrollDirection === 'down' ? 'translateY(-120px)' : 'translateY(0)',
+            opacity: scrollDirection === 'down' ? 0 : 1,
+          }}
+        >
+          <Container maxWidth="xl">
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                position: 'relative',
+                height: '100%',
+                py: 3,
+              }}
+            >
+              {/* Desktop Navigation Menu */}
+              <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 5 }}>
+                <Typography 
+                  component={RouterLink}
+                  to="/about" 
+                  sx={{ 
+                    textDecoration: 'none', 
+                    color: '#000',
+                    fontSize: '13px',
+                    letterSpacing: '2px',
+                    fontWeight: 400,
+                    textTransform: 'uppercase',
+                    position: 'relative',
+                    '&:after': {
+                      content: '""',
+                      position: 'absolute',
+                      bottom: -2,
+                      left: 0,
+                      width: 0,
+                      height: '1px',
+                      backgroundColor: '#000',
+                      transition: 'width 0.3s ease'
+                    },
+                    '&:hover:after': {
+                      width: '100%'
+                    }
+                  }}
+                >
+                  About
+                </Typography>
+                <Typography 
+                  component={RouterLink}
+                  to="/store" 
+                  sx={{ 
+                    textDecoration: 'none', 
+                    color: '#000',
+                    fontSize: '13px',
+                    letterSpacing: '2px',
+                    fontWeight: 400,
+                    textTransform: 'uppercase',
+                    position: 'relative',
+                    '&:after': {
+                      content: '""',
+                      position: 'absolute',
+                      bottom: -2,
+                      left: 0,
+                      width: 0,
+                      height: '1px',
+                      backgroundColor: '#000',
+                      transition: 'width 0.3s ease'
+                    },
+                    '&:hover:after': {
+                      width: '100%'
+                    }
+                  }}
+                >
+                  Store
+                </Typography>
+                <Typography 
+                  component={RouterLink}
+                  to="/collaborations" 
+                  sx={{ 
+                    textDecoration: 'none', 
+                    color: '#000',
+                    fontSize: '13px',
+                    letterSpacing: '2px',
+                    fontWeight: 400,
+                    textTransform: 'uppercase',
+                    position: 'relative',
+                    '&:after': {
+                      content: '""',
+                      position: 'absolute',
+                      bottom: -2,
+                      left: 0,
+                      width: 0,
+                      height: '1px',
+                      backgroundColor: '#000',
+                      transition: 'width 0.3s ease'
+                    },
+                    '&:hover:after': {
+                      width: '100%'
+                    }
+                  }}
+                >
+                  Collaborations
+                </Typography>
+              </Box>
 
-            {selectedProduct ? (
-              <ProductDetail product={selectedProduct} onAddToCart={addToCart} onBack={handleBackToShop} />
-            ) : (
-              <>
-                <Container sx={{ mt: 3, mb: 8, maxWidth: 'xl', px: { xs: 2, sm: 3, md: 4 } }}>
-                  <Grid 
-                    container 
-                    spacing={0.5}
-                    justifyContent="center"
-                  >
-                    {filteredProducts.map((product, index) => (
-                      <Fade 
-                        key={product.id}
-                        in={!loading}
-                        timeout={1000}
-                        style={{ 
-                          transitionDelay: `${index * 100}ms`
-                        }}
-                      >
-                        <Grid item xs={12} sm={6} md={4} lg={3}>
-                          <ProductCard 
-                            product={product}
-                            onAddToCart={addToCart}
-                            onProductClick={handleProductClick}
-                          />
-                        </Grid>
-                      </Fade>
-                    ))}
-                  </Grid>
-                </Container>
-              </>
-            )}
+              {/* Brand Logo - Centered Position */}
+              <Box sx={{ 
+                position: 'absolute',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <Typography
+                  component={RouterLink}
+                  to="/"
+                  sx={{
+                    textDecoration: 'none',
+                    cursor: 'pointer',
+                    transition: 'opacity 0.3s ease',
+                    '&:hover': {
+                      opacity: 0.85
+                    }
+                  }}
+                >
+                  <img src={logo} alt="Logo" style={{ height: '150px' }} />
+                </Typography>
+              </Box>
 
-            <Cart 
-              open={isCartOpen}
-              onClose={() => setIsCartOpen(false)}
-              items={cart}
-              onRemove={removeFromCart}
-              total={getTotalPrice()}
-            />
-
-            <Box component="footer" sx={{ py: 3, textAlign: 'center', mt: 'auto' }}>
-              {/* ... footer content ... */}
+              {/* Cart */}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Typography 
+                  component="button"
+                  onClick={() => setIsCartOpen(true)}
+                  sx={{ 
+                    cursor: 'pointer',
+                    border: 'none',
+                    background: 'none',
+                    color: '#000',
+                    fontSize: '13px',
+                    letterSpacing: '2px',
+                    fontWeight: 400,
+                    textTransform: 'uppercase',
+                    position: 'relative',
+                    '&:after': {
+                      content: '""',
+                      position: 'absolute',
+                      bottom: -2,
+                      left: 0,
+                      width: 0,
+                      height: '1px',
+                      backgroundColor: '#000',
+                      transition: 'width 0.3s ease'
+                    },
+                    '&:hover:after': {
+                      width: '100%'
+                    }
+                  }}
+                >
+                  Cart ({cart.length})
+                </Typography>
+                <IconButton 
+                  sx={{ 
+                    display: { md: 'none' },
+                    color: '#000'
+                  }}
+                  onClick={() => setDrawerOpen(!drawerOpen)}
+                >
+                  <MenuIcon />
+                </IconButton>
+              </Box>
             </Box>
-          </Box>
-        </>
-      )}
+          </Container>
+        </Box>
+
+        {/* Mobile Navigation Menu */}
+        <Box
+          sx={{
+            position: 'fixed',
+            top: '120px', // Positioned below main navbar
+            left: 0,
+            right: 0,
+            bgcolor: 'background.paper',
+            display: { xs: drawerOpen ? 'block' : 'none', md: 'none' },
+            zIndex: 999,
+          }}
+        >
+          <Container>
+            <Box sx={{ py: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Typography component="a" href="#" sx={{ textDecoration: 'none', color: 'text.primary' }}>
+                About
+              </Typography>
+              <Typography component="a" href="#" sx={{ textDecoration: 'none', color: 'text.primary' }}>
+                Shop
+              </Typography>
+              <Typography component="a" href="#" sx={{ textDecoration: 'none', color: 'text.primary' }}>
+                Collaborations
+              </Typography>
+            </Box>
+          </Container>
+        </Box>
+
+        <Routes>
+          <Route path="/" element={
+            <Home 
+              products={products}
+              onAddToCart={addToCart}
+              handleProductClick={handleProductClick}
+            />
+          } />
+          
+          <Route path="/store" element={
+            <Store 
+              products={filteredProducts}
+              loading={loading}  // This is already being passed
+              selectedCategory={selectedCategory}
+              categories={categories}
+              handleCategoryChange={handleCategoryChange}
+              onAddToCart={addToCart}
+              handleProductClick={handleProductClick}
+            />
+          } />
+        </Routes>
+
+        {/* Cart Component */}
+        <Cart 
+          open={isCartOpen} 
+          onClose={() => setIsCartOpen(false)}
+          cart={cart}
+          removeFromCart={removeFromCart}
+          getTotalPrice={getTotalPrice}
+        />
+
+        {/* Minimalist Contact Section */}
+        <Box sx={{ 
+          py: 16, 
+          bgcolor: '#FAF6F1', 
+          color: '#1a1a1a', 
+          textAlign: 'center',
+          borderTop: '1px solid rgba(0,0,0,0.06)'
+        }}>
+          <Container maxWidth="lg">
+            <Grid container spacing={8} justifyContent="center" alignItems="flex-start">
+              <Grid item xs={12} md={4}>
+                <Box sx={{ 
+                  textAlign: 'left',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 2
+                }}>
+                  <img 
+                    src={logo} 
+                    alt="DesertNordic Logo" 
+                    style={{ 
+                      width: '120px', 
+                      marginBottom: '24px',
+                      opacity: 0.9
+                    }} 
+                  />
+                  <Typography variant="body2" sx={{ 
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    '&:hover': { pl: 1 }
+                  }}>
+                    Our Story
+                  </Typography>
+                  <Typography variant="body2" sx={{ 
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    '&:hover': { pl: 1 }
+                  }}>
+                    Store
+                  </Typography>
+                  <Typography variant="body2" sx={{ 
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    '&:hover': { pl: 1 }
+                  }}>
+                    Contact
+                  </Typography>
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  gap: 3,
+                  alignItems: 'center'
+                }}>
+                  <Typography variant="subtitle1" sx={{ letterSpacing: 1 }}>
+                    CONNECT WITH US
+                  </Typography>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    gap: 3,
+                    '& svg': {
+                      fontSize: '20px',
+                      transition: 'all 0.3s ease',
+                    }
+                  }}>
+                    <IconButton 
+                      sx={{ 
+                        color: '#1a1a1a',
+                        '&:hover': {
+                          transform: 'translateY(-3px)',
+                          color: '#666'
+                        }
+                      }}
+                    >
+                      <FaInstagram />
+                    </IconButton>
+                    <IconButton 
+                      sx={{ 
+                        color: '#1a1a1a',
+                        '&:hover': {
+                          transform: 'translateY(-3px)',
+                          color: '#666'
+                        }
+                      }}
+                    >
+                      <FaPinterest />
+                    </IconButton>
+                    <IconButton 
+                      sx={{ 
+                        color: '#1a1a1a',
+                        '&:hover': {
+                          transform: 'translateY(-3px)',
+                          color: '#666'
+                        }
+                      }}
+                    >
+                      <FaLinkedinIn />
+                    </IconButton>
+                  </Box>
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="subtitle1" sx={{ mb: 3, letterSpacing: 1 }}>
+                    NEWSLETTER
+                  </Typography>
+                  <TextField
+                    variant="standard"
+                    placeholder="Your email"
+                    fullWidth
+                    sx={{
+                      '& .MuiInput-underline:before': {
+                        borderBottomColor: 'rgba(0,0,0,0.12)'
+                      },
+                      '& .MuiInput-underline:hover:before': {
+                        borderBottomColor: 'rgba(0,0,0,0.3)'
+                      }
+                    }}
+                  />
+                  <Button 
+                    sx={{ 
+                      mt: 3,
+                      textTransform: 'none',
+                      borderBottom: '1px solid #1a1a1a',
+                      borderRadius: 0,
+                      padding: '4px 0',
+                      minWidth: 'auto',
+                      '&:hover': {
+                        backgroundColor: 'transparent',
+                        paddingLeft: '8px'
+                      },
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    Subscribe
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
+          </Container>
+        </Box>
+
+        {/* Footer */}
+        <Box component="footer" sx={{ /* ... */ }}>
+          {/* ... footer content ... */}
+        </Box>
+      </Box>
     </>
   );
 }
