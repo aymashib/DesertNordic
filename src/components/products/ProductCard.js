@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardMedia, CardContent, Typography, Button, Box } from '@mui/material';
+import { Card, CardMedia, Typography, Box } from '@mui/material';
 
 const ProductCard = ({ product, onAddToCart, onProductClick }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -16,7 +16,7 @@ const ProductCard = ({ product, onAddToCart, onProductClick }) => {
           opacity: 1
         }
       }}
-      onClick={() => onProductClick(product)}
+      onClick={() => onProductClick(product)} // Ensure this function is called
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

@@ -10,8 +10,9 @@ import {
 import ProductCard from '../components/products/ProductCard';
 import ProductDetail from '../components/products/ProductDetail';
 import Loader from '../components/Loader';
+import ProductSlider from '../components/products/ProductSlider'; // Import the ProductSlider component
 
-const Store = ({ products, loading, selectedCategory, categories, handleCategoryChange, onAddToCart, handleProductClick }) => {
+const Store = ({ products, loading, selectedCategory, categories, handleCategoryChange, onAddToCart, onProductClick }) => {
   if (loading) {
     return <Loader isLoading={loading} />;
   }
@@ -32,6 +33,8 @@ const Store = ({ products, loading, selectedCategory, categories, handleCategory
         }}>
           Store
         </Typography>
+
+
         
         {/* Categories */}
         <Box sx={{ 
@@ -90,7 +93,7 @@ const Store = ({ products, loading, selectedCategory, categories, handleCategory
               <ProductCard
                 product={product}
                 onAddToCart={onAddToCart}
-                handleProductClick={handleProductClick}
+                onProductClick={onProductClick}
               />
             </Grid>
           ))}

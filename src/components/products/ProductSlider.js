@@ -1,122 +1,146 @@
 import React from 'react';
 import { Box, Typography, IconButton } from '@mui/material';
+import { Navigation, Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import ProductCard from './ProductCard';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-
-// Import Swiper styles
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 
 const ProductSlider = ({ products, onAddToCart, onProductClick }) => {
   return (
     <Box sx={{ position: 'relative' }}>
-      <Box className="swiper-button-prev" sx={{
-        position: 'absolute',
-        left: '-20px',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        zIndex: 2,
-        width: '40px',
-        height: '40px',
-        bgcolor: 'white',
-        borderRadius: '50%',
-        boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        '&:hover': {
-          bgcolor: '#f5f5f5'
+      <Box sx={{ 
+        position: 'relative',
+        '& .swiper-button-next, & .swiper-button-prev': {
+          display: 'none'
         }
       }}>
-        <ArrowBackIosIcon sx={{ fontSize: 20 }} />
+        <Swiper
+          modules={[Navigation, Autoplay]}
+          spaceBetween={30}
+          slidesPerView={1}
+          breakpoints={{
+            640: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+            1280: { slidesPerView: 4 }
+          }}
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false,
+          }}
+          loop={true}
+          navigation={{
+            nextEl: '.swiper-button-next-custom',
+            prevEl: '.swiper-button-prev-custom',
+          }}
+        >
+          {products.map((product) => (
+            <SwiperSlide key={product.id}>
+              <Box
+                sx={{
+                  position: 'relative',
+                  cursor: 'pointer',
+                  overflow: 'hidden',
+                  '&:hover img': {
+                    transform: 'scale(1.05)',
+                  },
+                  '&:hover .product-info': {
+                    opacity: 1,
+                    transform: 'translateY(0)',
+                  }
+                }}
+                onClick={() => onProductClick(product)}
+              >
+                <Box
+                  component="img"
+                  src={product.image}
+                  alt={product.name}
+                  sx={{
+                    width: '100%',
+                    height: '380px',
+                    objectFit: 'cover',
+                    transition: 'transform 0.6s ease',
+                  }}
+                />
+                <Box
+                  className="product-info"
+                  sx={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    bgcolor: 'rgba(250, 246, 241, 0.95)',
+                    p: 3,
+                    transform: 'translateY(20px)',
+                    opacity: 0,
+                    transition: 'all 0.3s ease',
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontSize: '14px',
+                      letterSpacing: '1px',
+                      mb: 1,
+                      textTransform: 'uppercase'
+                    }}
+                  >
+                    {product.name}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: '13px',
+                      color: 'text.secondary',
+                      letterSpacing: '0.5px'
+                    }}
+                  >
+                    ${product.price}
+                  </Typography>
+                </Box>
+              </Box>
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </Box>
 
-      <Box className="swiper-button-next" sx={{
-        position: 'absolute',
-        right: '-20px',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        zIndex: 2,
-        width: '40px',
-        height: '40px',
-        bgcolor: 'white',
-        borderRadius: '50%',
-        boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        '&:hover': {
-          bgcolor: '#f5f5f5'
-        }
-      }}>
-        <ArrowForwardIosIcon sx={{ fontSize: 20 }} />
-      </Box>
-
-      <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={30}
-        slidesPerView={1}
-        navigation={{
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        }}
-        pagination={false}
-        autoplay={{
-          delay: 4000,
-          disableOnInteraction: false,
-        }}
-        breakpoints={{
-          640: {
-            slidesPerView: 2,
-          },
-          1024: {
-            slidesPerView: 4,
-          },
+      {/* Custom Navigation Buttons */}
+      <IconButton
+        className="swiper-button-prev-custom"
+        sx={{
+          position: 'absolute',
+          left: -20,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          bgcolor: 'transparent',
+          color: '#000',
+          zIndex: 2,
+          '&:hover': {
+            bgcolor: 'transparent',
+            color: '#666'
+          }
         }}
       >
-        {products.map((product) => (
-          <SwiperSlide key={product.id}>
-            <Box sx={{ 
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              textAlign: 'center'
-            }}>
-              <ProductCard
-                product={product}
-                onAddToCart={onAddToCart}
-                onProductClick={onProductClick}
-              />
-              <Typography 
-                variant="h6" 
-                sx={{ 
-                  mt: 2,
-                  fontWeight: 500,
-                  fontSize: '1rem'
-                }}
-              >
-                {product.name}
-              </Typography>
-              <Typography 
-                variant="body1" 
-                sx={{ 
-                  mt: 1,
-                  color: 'text.secondary'
-                }}
-              >
-                ${product.price}
-              </Typography>
-            </Box>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+        <ArrowBackIcon />
+      </IconButton>
+      <IconButton
+        className="swiper-button-next-custom"
+        sx={{
+          position: 'absolute',
+          right: -20,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          bgcolor: 'transparent',
+          color: '#000',
+          zIndex: 2,
+          '&:hover': {
+            bgcolor: 'transparent',
+            color: '#666'
+          }
+        }}
+      >
+        <ArrowForwardIcon />
+      </IconButton>
     </Box>
   );
 };

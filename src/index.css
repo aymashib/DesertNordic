@@ -26,6 +26,7 @@ body {
 .masonry-grid_column > div {
   margin-bottom: 8px;
 }
+
 .swiper-button-prev::after,
 .swiper-button-next::after {
   display: none;

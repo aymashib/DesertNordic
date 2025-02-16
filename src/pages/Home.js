@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import ProductSlider from '../components/products/ProductSlider';
+import { FaInstagram, FaPinterest, FaLinkedinIn } from 'react-icons/fa';
 
 const Home = ({ products, onAddToCart, handleProductClick }) => {
   return (
@@ -147,10 +148,15 @@ const Home = ({ products, onAddToCart, handleProductClick }) => {
       {/* Best Sellers Section */}
       <Container sx={{ py: 12 }}>
         <Typography variant="h2" sx={{
-          fontSize: '2.5rem',
-          fontWeight: 500,
-          mb: 6,
-          textAlign: 'left'
+          color: 'rgb(7.8% 7.1% 7.1%)',
+          fontFamily: 'Akrobat',
+          fontSize: '56px',
+          fontWeight: 900,
+          letterSpacing: '-3.84px',
+          lineHeight: '172.8px',
+          margin: '0px 0px 16px',
+          textAlign: 'center',
+          textTransform: 'uppercase'
         }}>
           BEST SELLERS
         </Typography>
@@ -200,6 +206,7 @@ const Home = ({ products, onAddToCart, handleProductClick }) => {
         <Box
           component="img"
           src={require('../assets/images/blackdesert.jpg')}
+          className="parallax-image"
           sx={{
             width: '100%',
             height: '100%',
@@ -250,9 +257,96 @@ const Home = ({ products, onAddToCart, handleProductClick }) => {
         </Box>
       </Box>
 
-     
+            {/* Contact Section */}
+            <Box sx={{ 
+        py: 16, 
+        bgcolor: '#FAF6F1', 
+        color: '#1a1a1a', 
+        textAlign: 'center',
+        borderTop: '1px solid rgba(0,0,0,0.06)'
+      }}>
+        <Container maxWidth="lg">
+          <Grid container spacing={8} justifyContent="center" alignItems="flex-start">
+            <Grid item xs={12} md={4}>
+              <Typography variant="subtitle1" sx={{ mb: 3, letterSpacing: 1 }}>
+                CONTACT
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 2, color: '#4A2F24' }}>
+                info@desertnordic.com
+              </Typography>
+              <Typography variant="body1" sx={{ color: '#4A2F24' }}>
+                +1 234 567 890
+              </Typography>
+              <Typography variant="body1" sx={{ mt: 2, color: '#4A2F24' }}>
+                123 Desert Street
+              </Typography>
+              <Typography variant="body1" sx={{ color: '#4A2F24' }}>
+                Nordic City, NC 12345
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <Typography variant="subtitle1" sx={{ mb: 3, letterSpacing: 1 }}>
+                FOLLOW US
+              </Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3 }}>
+                <FaInstagram style={{ cursor: 'pointer', fontSize: '20px' }} />
+                <FaPinterest style={{ cursor: 'pointer', fontSize: '20px' }} />
+                <FaLinkedinIn style={{ cursor: 'pointer', fontSize: '20px' }} />
+              </Box>
+              <Typography variant="body2" sx={{ mt: 3, color: '#4A2F24' }}>
+                Follow us for exclusive updates
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <Typography variant="subtitle1" sx={{ mb: 3, letterSpacing: 1 }}>
+                NEWSLETTER
+              </Typography>
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center',
+                gap: 2 
+              }}>
+                <input
+                  type="email"
+                  placeholder="Your email"
+                  style={{
+                    width: '100%',
+                    padding: '8px 0',
+                    border: 'none',
+                    borderBottom: '1px solid rgba(0,0,0,0.12)',
+                    backgroundColor: 'transparent',
+                    outline: 'none',
+                    textAlign: 'center'
+                  }}
+                />
+                <Button 
+                  sx={{ 
+                    mt: 2,
+                    textTransform: 'none',
+                    borderBottom: '1px solid #4A2F24',
+                    borderRadius: 0,
+                    padding: '4px 0',
+                    minWidth: 'auto',
+                    color: '#4A2F24',
+                    '&:hover': {
+                      backgroundColor: 'transparent',
+                      paddingLeft: '8px'
+                    },
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  Subscribe
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
     </>
   );
-}; 
+};
 
 export default Home;

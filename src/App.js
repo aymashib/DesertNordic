@@ -6,8 +6,11 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link as RouterLink } from 'react-router-dom';
 import Store from './pages/Store';
 import Home from './pages/Home';
+import About from './pages/About';
+import Collaborations from './pages/Collaborations';
 import { FaUser, FaShoppingCart, FaInstagram, FaPinterest, FaLinkedinIn } from 'react-icons/fa'; // Import icons from react-icons
 import useScrollDirection from './hooks/useScrollDirection';
+
 
 import { 
   Navbar, 
@@ -146,10 +149,10 @@ const products = [
   },
   {
     id: 12,
-    name: 'Nordic Mug 10',
+    name: 'Scorpion Desert Collection',
     price: 39.99,
-    image: require('./assets/images/preview (5).webp'),
-    hoverImage: require('./assets/images/preview (5).webp'),
+    image: require('./assets/images/scorpion-desertCollection Background Removed.png'),
+    hoverImage: require('./assets/images/scorpion-desertCollection.png'),
     description: 'Geometric pattern ceramic mug',
     category: 'Antartica'
   }
@@ -161,6 +164,31 @@ const products = [
 
 
 
+
+// After the products array and before the App function
+// Delete this entire section:
+const galleryItems = [
+  {
+    title: "Desert Collection",
+    description: "Inspired by nature's raw beauty",
+    image: require('./assets/images/preview (1).webp')
+  },
+  {
+    title: "Nordic Series",
+    description: "Clean lines meet natural forms",
+    image: require('./assets/images/preview (2).webp')
+  },
+  {
+    title: "Fusion Collection",
+    description: "Where minimalism meets tradition",
+    image: require('./assets/images/preview (4).webp')
+  },
+  {
+    title: "Elements Series",
+    description: "Crafted from earth and fire",
+    image: require('./assets/images/preview (5).webp')
+  }
+];
 
 function App() {
   const scrollDirection = useScrollDirection();
@@ -226,6 +254,7 @@ function App() {
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
+    // Navigate to product details page if needed
   };
 
   const handleBackToShop = () => {
@@ -502,27 +531,27 @@ function App() {
         </Box>
 
         <Routes>
-          <Route path="/" element={
-            <Home 
-              products={products}
-              onAddToCart={addToCart}
-              handleProductClick={handleProductClick}
-            />
-          } />
-          
-          <Route path="/store" element={
-            <Store 
-              products={filteredProducts}
-              loading={loading}  // This is already being passed
-              selectedCategory={selectedCategory}
-              categories={categories}
-              handleCategoryChange={handleCategoryChange}
-              onAddToCart={addToCart}
-              handleProductClick={handleProductClick}
-            />
-          } />
-        </Routes>
-
+  <Route path="/" element={
+    <Home 
+      products={products}
+      onAddToCart={addToCart}
+      handleProductClick={handleProductClick}
+    />
+  } />
+  <Route path="/about" element={<About />} />
+  <Route path="/collaborations" element={<Collaborations />} />
+  <Route path="/store" element={
+    <Store 
+      products={filteredProducts}
+      loading={loading}
+      selectedCategory={selectedCategory}
+      categories={categories}
+      handleCategoryChange={handleCategoryChange}
+      onAddToCart={addToCart}
+      handleProductClick={handleProductClick}
+    />
+  } />
+</Routes>
         {/* Cart Component */}
         <Cart 
           open={isCartOpen} 
@@ -531,157 +560,6 @@ function App() {
           removeFromCart={removeFromCart}
           getTotalPrice={getTotalPrice}
         />
-
-        {/* Minimalist Contact Section */}
-        <Box sx={{ 
-          py: 16, 
-          bgcolor: '#FAF6F1', 
-          color: '#1a1a1a', 
-          textAlign: 'center',
-          borderTop: '1px solid rgba(0,0,0,0.06)'
-        }}>
-          <Container maxWidth="lg">
-            <Grid container spacing={8} justifyContent="center" alignItems="flex-start">
-              <Grid item xs={12} md={4}>
-                <Box sx={{ 
-                  textAlign: 'left',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 2
-                }}>
-                  <img 
-                    src={logo} 
-                    alt="DesertNordic Logo" 
-                    style={{ 
-                      width: '120px', 
-                      marginBottom: '24px',
-                      opacity: 0.9
-                    }} 
-                  />
-                  <Typography variant="body2" sx={{ 
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    '&:hover': { pl: 1 }
-                  }}>
-                    Our Story
-                  </Typography>
-                  <Typography variant="body2" sx={{ 
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    '&:hover': { pl: 1 }
-                  }}>
-                    Store
-                  </Typography>
-                  <Typography variant="body2" sx={{ 
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    '&:hover': { pl: 1 }
-                  }}>
-                    Contact
-                  </Typography>
-                </Box>
-              </Grid>
-
-              <Grid item xs={12} md={4}>
-                <Box sx={{ 
-                  display: 'flex', 
-                  flexDirection: 'column',
-                  gap: 3,
-                  alignItems: 'center'
-                }}>
-                  <Typography variant="subtitle1" sx={{ letterSpacing: 1 }}>
-                    CONNECT WITH US
-                  </Typography>
-                  <Box sx={{ 
-                    display: 'flex', 
-                    gap: 3,
-                    '& svg': {
-                      fontSize: '20px',
-                      transition: 'all 0.3s ease',
-                    }
-                  }}>
-                    <IconButton 
-                      sx={{ 
-                        color: '#1a1a1a',
-                        '&:hover': {
-                          transform: 'translateY(-3px)',
-                          color: '#666'
-                        }
-                      }}
-                    >
-                      <FaInstagram />
-                    </IconButton>
-                    <IconButton 
-                      sx={{ 
-                        color: '#1a1a1a',
-                        '&:hover': {
-                          transform: 'translateY(-3px)',
-                          color: '#666'
-                        }
-                      }}
-                    >
-                      <FaPinterest />
-                    </IconButton>
-                    <IconButton 
-                      sx={{ 
-                        color: '#1a1a1a',
-                        '&:hover': {
-                          transform: 'translateY(-3px)',
-                          color: '#666'
-                        }
-                      }}
-                    >
-                      <FaLinkedinIn />
-                    </IconButton>
-                  </Box>
-                </Box>
-              </Grid>
-
-              <Grid item xs={12} md={4}>
-                <Box sx={{ textAlign: 'center' }}>
-                  <Typography variant="subtitle1" sx={{ mb: 3, letterSpacing: 1 }}>
-                    NEWSLETTER
-                  </Typography>
-                  <TextField
-                    variant="standard"
-                    placeholder="Your email"
-                    fullWidth
-                    sx={{
-                      '& .MuiInput-underline:before': {
-                        borderBottomColor: 'rgba(0,0,0,0.12)'
-                      },
-                      '& .MuiInput-underline:hover:before': {
-                        borderBottomColor: 'rgba(0,0,0,0.3)'
-                      }
-                    }}
-                  />
-                  <Button 
-                    sx={{ 
-                      mt: 3,
-                      textTransform: 'none',
-                      borderBottom: '1px solid #1a1a1a',
-                      borderRadius: 0,
-                      padding: '4px 0',
-                      minWidth: 'auto',
-                      '&:hover': {
-                        backgroundColor: 'transparent',
-                        paddingLeft: '8px'
-                      },
-                      transition: 'all 0.3s ease'
-                    }}
-                  >
-                    Subscribe
-                  </Button>
-                </Box>
-              </Grid>
-            </Grid>
-          </Container>
-        </Box>
-
-        {/* Footer */}
-        <Box component="footer" sx={{ /* ... */ }}>
-          {/* ... footer content ... */}
-        </Box>
       </Box>
     </>
   );
